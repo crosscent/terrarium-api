@@ -1,6 +1,10 @@
 module Main where
 
+import Happstack.Server ( nullConf
+                        , simpleHTTP
+                        , toResponse
+                        , ok)
 import Lib
 
 main :: IO ()
-main = someFunc
+main = simpleHTTP nullConf $ ok "Hello, World"
