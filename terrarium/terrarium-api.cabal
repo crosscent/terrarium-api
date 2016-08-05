@@ -15,8 +15,11 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Lib
+  exposed-modules:     JsonModel
+                     , Lib
+                     , Model
   build-depends:       base >= 4.7 && < 5
+                     , aeson >= 0.11.2.0
                      , bytestring  >= 0.10.6.0
                      , happstack-server >=7.4.6.2
                      , transformers >= 0.4.2.0
@@ -28,6 +31,7 @@ executable terrarium-api-exe
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
                      , terrarium-api
+                     , aeson >= 0.11.2.0
                      , bytestring  >= 0.10.6.0
                      , happstack-server >=7.4.6.2
                      , transformers >= 0.4.2.0
