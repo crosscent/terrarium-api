@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module JsonModel
     ( CircularPotCalInput(..)
-    , SquarePotCalInput(..)
+    , RectangularPotCalInput(..)
     ) where
 
 import Control.Applicative              (empty)
@@ -27,17 +27,17 @@ instance ToJSON CircularPotCalInput where
     toEncoding (CircularPotCalInput inner outer) = 
         pairs ("inner" .= inner <> "outer" .= outer)
 
-data SquarePotCalInput = SquarePotCalInput InnerRadius Length Width
+data RectangularPotCalInput = RectangularPotCalInput InnerRadius Length Width
 
-instance FromJSON SquarePotCalInput where
-    parseJSON (Object v) = SquarePotCalInput <$>
+instance FromJSON RectangularPotCalInput where
+    parseJSON (Object v) = RectangularPotCalInput <$>
                            v .: "inner" <*>
                            v .: "length" <*>
                            v .: "width"
     parseJSON _          = empty
 
-instance ToJSON SquarePotCalInput where
-    toJSON (SquarePotCalInput inner length width) =
+instance ToJSON RectangularPotCalInput where
+    toJSON (RectangularPotCalInput inner length width) =
         object ["inner" .= inner, "length" .= length, "width" .= width]
-    toEncoding (SquarePotCalInput inner length width) = 
+    toEncoding (RectangularPotCalInput inner length width) = 
         pairs ("inner" .= inner <> "length" .= length <> "width" .= width)
