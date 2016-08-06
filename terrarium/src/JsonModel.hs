@@ -2,6 +2,7 @@
 module JsonModel
     ( CircularPotCalInput(..)
     , RectangularPotCalInput(..)
+    , RectangularClusterPlot(..)
     ) where
 
 import Control.Applicative              (empty)
@@ -41,3 +42,11 @@ instance ToJSON RectangularPotCalInput where
         object ["inner" .= inner, "length" .= length, "width" .= width]
     toEncoding (RectangularPotCalInput inner length width) = 
         pairs ("inner" .= inner <> "length" .= length <> "width" .= width)
+
+data RectangularClusterPlot = RectangularClusterPlot RectangularPotCalInput [(Double, Double)]
+
+instance ToJSON RectangularClusterPlot where
+    toJSON (RectangularClusterPlot input output) = 
+        object ["input" .= input, "output" .= output]
+    toEncoding (RectangularClusterPlot input output) = 
+        pairs ("input" .= input <> "output" .= output)
