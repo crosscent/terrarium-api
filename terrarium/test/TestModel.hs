@@ -4,6 +4,6 @@ import JsonModel
 import Model
 import Test.QuickCheck
 
-testSquarePotCal :: Double -> Double -> Double -> Bool
-testSquarePotCal x y z = (fmap circlesInSquare cal) == (fmap length $ fmap circlesInSquareCoord cal)
-    where cal = verifySquarePotCal (SquarePotCalInput x y z)
+testRectangularPotCal :: Double -> Double -> Double -> Bool
+testRectangularPotCal x y z = (fmap circlesInRectangle cal) == (fmap length $ fmap circlesInRectangleCoord cal)
+    where cal = verifyRectangularPotCal (RectangularPotCalInput x y z)
