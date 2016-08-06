@@ -18,6 +18,7 @@ import Happstack.Server         ( askRq
 import Control.Monad            (msum)
 import Control.Monad.IO.Class   (liftIO)
 import JsonModel
+import Model
 import Lib
 
 main :: IO ()
@@ -28,6 +29,11 @@ main = simpleHTTP nullConf $ msum
     , dirs "post_data" $ do method POST
                             body <- getBody
                             ok $ body
+    , dirs "calculation/rectangular_pot" $ do method POST
+                                              body <- getBody
+                                              let input = parseRectangularPotCalInput body
+                                              let output = fmap circlesInRectangleCoord (input >>= verifyRectangularPotCal)
+                                              ok $ A.encode $ (RectangularClusterPlot (fromJust input) (fromJust output))
     , ok $ L.pack $ "Hello, World"
     ]
 
@@ -41,3 +47,6 @@ getBody = do
 
 parseJSON :: L.ByteString -> L.ByteString
 parseJSON body = A.encode $ (fromJust $ A.decode body :: CircularPotCalInput)
+
+parseRectangularPotCalInput :: L.ByteString -> Maybe RectangularPotCalInput
+parseRectangularPotCalInput body = A.decode body :: Maybe RectangularPotCalInput
