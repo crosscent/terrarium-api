@@ -1,2 +1,7 @@
+import TestModel
+import Test.QuickCheck
+
 main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+main = do
+    putStrLn "Testing square pot calculation..."
+    quickCheck testSquarePotCal
