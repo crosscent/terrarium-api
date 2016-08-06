@@ -40,4 +40,4 @@ getBody = do
         Nothing     -> return . L.pack $ ""
 
 parseJSON :: L.ByteString -> L.ByteString
-parseJSON body = A.encode $ (fromJust $ A.decode body :: CircularPotCal)
+parseJSON body = A.encode $ (fromJust $ A.decode body :: CircularPotCalInput)
