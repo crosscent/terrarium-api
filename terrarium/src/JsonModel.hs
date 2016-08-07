@@ -14,7 +14,7 @@ type OuterRadius = Double
 type Length = Double
 type Width = Double
 
-data CircularPotCalInput = CircularPotCalInput InnerRadius OuterRadius
+data CircularPotCalInput = CircularPotCalInput InnerRadius OuterRadius deriving (Show)
 
 instance FromJSON CircularPotCalInput where
     parseJSON (Object v) = CircularPotCalInput <$>
@@ -28,7 +28,7 @@ instance ToJSON CircularPotCalInput where
     toEncoding (CircularPotCalInput inner outer) = 
         pairs ("inner" .= inner <> "outer" .= outer)
 
-data RectangularPotCalInput = RectangularPotCalInput InnerRadius Length Width
+data RectangularPotCalInput = RectangularPotCalInput InnerRadius Length Width deriving (Show)
 
 instance FromJSON RectangularPotCalInput where
     parseJSON (Object v) = RectangularPotCalInput <$>
@@ -43,7 +43,7 @@ instance ToJSON RectangularPotCalInput where
     toEncoding (RectangularPotCalInput inner length width) = 
         pairs ("inner" .= inner <> "length" .= length <> "width" .= width)
 
-data RectangularClusterPlot = RectangularClusterPlot RectangularPotCalInput [(Double, Double)]
+data RectangularClusterPlot = RectangularClusterPlot RectangularPotCalInput [(Double, Double)] deriving (Show)
 
 instance ToJSON RectangularClusterPlot where
     toJSON (RectangularClusterPlot input output) = 
