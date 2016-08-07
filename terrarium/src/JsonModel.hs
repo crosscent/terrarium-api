@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module JsonModel
     ( CircularPotCalInput(..)
+    , CircularClusterPlot(..)
     , RectangularPotCalInput(..)
     , RectangularClusterPlot(..)
     ) where
@@ -27,6 +28,14 @@ instance ToJSON CircularPotCalInput where
         object ["inner" .= inner, "outer" .= outer]
     toEncoding (CircularPotCalInput inner outer) = 
         pairs ("inner" .= inner <> "outer" .= outer)
+
+data CircularClusterPlot = CircularClusterPlot CircularPotCalInput [(Double, Double)] deriving (Show)
+
+instance ToJSON CircularClusterPlot where
+    toJSON (CircularClusterPlot input output) =
+        object ["input" .= input, "output" .= output]
+    toEncoding (CircularClusterPlot input output) =
+        pairs ("input" .= input <> "output" .= output)
 
 data RectangularPotCalInput = RectangularPotCalInput InnerRadius Length Width deriving (Show)
 

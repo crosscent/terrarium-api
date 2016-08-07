@@ -32,6 +32,9 @@ main = simpleHTTP nullConf $ msum
     , dirs "calculation/rectangular_pot" $ do method POST
                                               body <- getBody
                                               ok $ calculateRectangularPot body
+    , dirs "calculation/circular_pot" $ do method POST
+                                           body <- getBody
+                                           ok $ calculateCircularPot body
     , ok $ L.pack $ "Hello, World"
     ]
 
@@ -45,6 +48,11 @@ getBody = do
 
 parseJSON :: L.ByteString -> L.ByteString
 parseJSON body = A.encode $ (fromJust $ A.decode body :: CircularPotCalInput)
+
+calculateCircularPot :: L.ByteString -> L.ByteString
+calculateCircularPot body = A.encode $ (CircularClusterPlot (fromJust input) (fromJust output))
+    where input = A.decode body :: Maybe CircularPotCalInput
+          output = fmap circlesInCircleCoord (input >>= verifyCircularPotCal)
 
 calculateRectangularPot :: L.ByteString -> L.ByteString
 calculateRectangularPot body = A.encode $ (RectangularClusterPlot (fromJust input) (fromJust output))
