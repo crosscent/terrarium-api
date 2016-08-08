@@ -1,0 +1,12 @@
+---
+- hosts: all
+  remote_user: vagrant
+  sudo: yes
+
+  vars:
+    document_root: /home/vagrant/bettermatter
+
+  roles:
+    - common
+    - haskell-related
+    - compiles
