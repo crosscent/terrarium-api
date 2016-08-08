@@ -15,14 +15,29 @@ import Happstack.Server         ( askRq
                                 , Method (POST)
                                 , ServerPart )
 
+import Happstack.Server.Internal.Types  ( logMAccess
+                                        , Conf(..))
+
 import Control.Monad            (msum)
 import Control.Monad.IO.Class   (liftIO)
+import System.Environment       (getArgs)
 import JsonModel
 import Model
 import Lib
 
+type Port = Int
+
 main :: IO ()
-main = simpleHTTP nullConf $ msum
+main = do
+    args <- getArgs
+    let conf = genConf (read $ head args :: Int)
+    server conf
+
+genConf :: Port -> Conf
+genConf port = Conf port Nothing (Just logMAccess) 30 Nothing
+
+server :: Conf -> IO ()
+server conf = simpleHTTP conf $ msum
     [ dirs "parse_json" $ do method POST
                              body <- getBody
                              ok $ parseJSON body
