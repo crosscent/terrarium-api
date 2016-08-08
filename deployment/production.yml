@@ -9,6 +9,4 @@
 
   roles:
     - common
-    - haskell-related
-    - compiles
     - deployment

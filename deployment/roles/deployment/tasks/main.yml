@@ -1,0 +1,7 @@
+---
+
+- name: create binary folder
+  file: path={{binary_root}} state=directory
+
+- name: copy terrarium-api-exe
+  copy: src=../terrarium/dist/x86_64-linux/terrarium-api-exe dest={{binary_root}}/terrarium-api-exe mode=0755
