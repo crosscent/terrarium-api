@@ -1,0 +1,4 @@
+---
+- name: compile terrarium-api
+  command: stack install --allow-different-user --local-bin-path {{document_root}}/terrarium/dist/x86_64-linux chdir={{document_root}}/terrarium
+  sudo: no
