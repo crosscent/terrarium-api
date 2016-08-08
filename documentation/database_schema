@@ -1,0 +1,19 @@
+@startuml
+class geomap_place {
++ id
++ display_name
++ osm_id
++ place_id
++ last_updated
++ osm_type
+}
+
+class geomap_place_polygon {
++ id
++ place
++ polygon
++ last_updated
+}
+
+geomap_place_polygon::place --> geomap_place::id : place -> id
+@enduml
