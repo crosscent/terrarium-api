@@ -7,3 +7,7 @@
   with_items:
     - build-essential
     - sudo
+
+- name: generate en_CA.UTF
+  sudo: yes
+  shell: locale-gen en_CA.UTF-8
