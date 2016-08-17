@@ -1,0 +1,28 @@
+terrarium:
+    restart: always
+    build: ./terrarium
+    expose:
+        - "8000"
+    links:
+        - postgres:postgres
+    volumes:
+        - /var/src/terrarium
+    command: terrarium-api-exe 8000
+
+postgres:
+    restart: always
+    image: postgres:latest
+    ports:
+        - "5432:5432"
+    volumes:
+        - pgdata:/var/lib/postgresql/data
+
+nginx:
+    restart: always
+    build: ./nginx
+    ports:
+        - "80:80"
+    volumes_from:
+        - terrarium
+    links:
+        - terrarium:terrarium

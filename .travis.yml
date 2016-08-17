@@ -1,4 +1,8 @@
-sudo : false
+sudo : required
+dist: trusty
+
+services:
+  - docker
 
 cache:
   directories:
@@ -15,11 +19,17 @@ before_install:
   - export PATH=$HOME/.local/bin:$PATH
   - travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
   - chmod a+x ~/.local/bin/stack
+# Disable conflicting services
+  - sudo service postgresql stop
 
 install:
   - (cd terrarium && stack setup --no-terminal)
-  - (cd terrarium && stack build --no-terminal)
 
 script:
+  - docker-compose build
+  - docker-compose up -d
   - (cd terrarium && stack test --no-terminal)
   - (cd terrarium && stack build --no-terminal)
+
+after_script:
+ - docker-compose down
