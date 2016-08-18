@@ -9,3 +9,18 @@
 - name: compile terrarium-api
   command: stack install --allow-different-user --local-bin-path {{document_root}}/terrarium/dist/x86_64-linux chdir={{document_root}}/terrarium
   sudo: no
+
+- name: install libpq-dev, required to compile postgres-migration
+  apt: name=libpq-dev update_cache=yes state=present
+
+- name: git clone postgres-migration
+  git: repo=https://github.com/crosscent/haskell_postgres_migration.git dest={{home_root}}/haskell_postgres_migration
+  sudo: no
+
+- name: stack setup postgres-migration
+  command: stack setup --allow-different-user chdir={{home_root}}/haskell_postgres_migration
+  sudo: no
+
+- name: compile postgres-migration to terrarium-api folder
+  command: stack install --allow-different-user --local-bin-path {{document_root}}/terrarium/dist/x86_64-linux chdir={{home_root}}/haskell_postgres_migration
+  sudo: no

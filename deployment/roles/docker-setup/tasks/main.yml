@@ -1,0 +1,34 @@
+---
+- name: get kernel version
+  shell: uname -r
+  ignore_errors: yes 
+  register: uname_result
+
+- name: install necessary packages before installing docker
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items:
+      - apt-transport-https
+      - ca-certificates
+      - linux-image-extra-{{uname_result.stdout}}
+  become: yes 
+
+- name: add apt key for docker
+  apt_key: keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D state=present
+  become: yes 
+
+- name: add docker to docker.list
+  shell: echo 'deb https://apt.dockerproject.org/repo ubuntu-trusty main'|sudo tee /etc/apt/sources.list.d/docker.list
+  become: yes 
+
+- name: install docker
+  apt: name=docker-engine update_cache=yes
+  become: yes 
+
+- name: add docker group
+  group: name=docker state=present
+
+- name: add user to docker group
+  user: name=vagrant append=yes groups=docker
+
+- name: install docker compose
+  shell: curl -L https://github.com/docker/compose/releases/download/1.8.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose; chmod +x /usr/local/bin/docker-compose

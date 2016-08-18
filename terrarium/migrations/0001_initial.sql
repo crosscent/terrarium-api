@@ -1,4 +1,4 @@
-CREATE EXTENSION postgis;
+CREATE EXTENSION IF NOT EXISTS postgis;
 
 CREATE TABLE geomap_place_polygon(
     ID INT PRIMARY KEY                              NOT NULL,

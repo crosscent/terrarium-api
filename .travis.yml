@@ -26,10 +26,13 @@ install:
   - (cd terrarium && stack setup --no-terminal)
 
 script:
-  - docker-compose build
-  - docker-compose up -d
   - (cd terrarium && stack test --no-terminal)
   - (cd terrarium && stack build --no-terminal)
+  - (cd terrarium && mkdir -p dist/x86_64-linux/ && stack install --local-bin-path dist/x86_64-linux --no-terminal)
+  - (mkdir postgres-migration && cd postgres-migration && git clone https://github.com/crosscent/haskell_postgres_migration.git .)
+  - (cd postgres-migration && stack install --local-bin-path ../terrarium/dist/x86_64-linux --no-terminal)
+  - docker-compose build
+  - docker-compose up -d
 
 after_script:
  - docker-compose down
