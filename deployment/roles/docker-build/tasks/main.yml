@@ -1,0 +1,9 @@
+---
+- name: docker-compose build
+  shell: docker-compose build chdir={{document_root}}/terrarium
+
+- name: docker-compose up -d
+  shell: docker-compose up -d chdir={{document_root}}/terrarium
+
+- name: docker-compose migrate
+  shell: docker-compose run terrarium postgres-migration-exe --POSTGRES_HOST="postgres" --POSTGRES_USERNAME="postgres" chdir={{document_root}}/terrarium

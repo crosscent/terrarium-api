@@ -5,9 +5,6 @@ terrarium:
         - "8000"
     links:
         - postgres:postgres
-    volumes:
-        - /var/src/terrarium
-    command: terrarium-api-exe 8000
 
 postgres:
     restart: always
