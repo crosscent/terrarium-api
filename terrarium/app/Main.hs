@@ -21,6 +21,7 @@ import Happstack.Server.Internal.Types  ( logMAccess
 import Control.Monad            (msum)
 import Control.Monad.IO.Class   (liftIO)
 import System.Environment       (getArgs)
+import qualified Geolocate.JSON as GeolocateJSON
 import JsonModel
 import Model
 import Lib
@@ -50,6 +51,10 @@ server conf = simpleHTTP conf $ msum
     , dirs "calculation/circular_pot" $ do method POST
                                            body <- getBody
                                            ok $ calculateCircularPot body
+    , dirs "place/search" $ do method POST
+                               body <- getBody
+                               result <- liftIO $ GeolocateJSON.handleGeolocateQuery body
+                               ok $ result
     , ok $ L.pack $ "Hello, World"
     ]
 
