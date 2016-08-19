@@ -4,9 +4,12 @@
   sudo: yes
 
   vars:
+    home_root: /home/vagrant
     document_root: /home/vagrant/bettermatter
     binary_root: /home/vagrant/binaries
 
   roles:
-    - common
-    - deployment
+    - docker-setup
+    - haskell-related
+    - compiles
+    - docker-build
