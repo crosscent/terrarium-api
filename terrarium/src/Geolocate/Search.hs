@@ -15,6 +15,7 @@ import Data.Aeson
 import Data.Monoid                          ( (<>) )
 import Data.Int                             ( Int64 )
 import Data.Sequence                        ( fromList )
+import qualified Data.Text as Text          ( unpack )
 
 type OSM_id = Integer
 
@@ -33,7 +34,9 @@ data NominatimResult = NominatimResult
 instance FromJSON Coordinates where
     parseJSON v = do
         [x, y] <- parseJSON v
-        return $ Coordinates (read x :: Double) (read y :: Double)
+        case (x, y) of
+          ((Number x), (Number y)) -> return $ Coordinates (read $ show x) (read $ show y)
+          ((String x), (String y)) -> return $ Coordinates (read $ Text.unpack $ x) (read $ Text.unpack $ y)
 
 instance FromJSON Polygon where
     parseJSON json = do
@@ -75,7 +78,7 @@ searchNominatim :: String -> IO (L.ByteString)
 searchNominatim query = do
     result <- HTTP.simpleHTTP (CustomHTTP.getRequest $ url) >>= HTTP.getResponseBody
     case decode(L.pack result) :: Maybe [NominatimResult] of
-        Nothing -> return "An error has occured: JSON returned from Nominatim could not be parsed"
+        Nothing -> return $ L.pack $ "An error has occured: JSON returned from Nominatim could not be parsed: " ++ result
         Just results -> do
             case filterNominatim results of
               Nothing -> return $ encode $ head results
