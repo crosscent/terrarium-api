@@ -33,7 +33,7 @@ instance ToJSON GeolocateQuery where
 handleGeolocateQuery :: L.ByteString -> (IO L.ByteString)
 handleGeolocateQuery body = result $ parseGeolocateQuery body 
     where result Nothing = return ""
-          result (Just (GeolocateQuery query)) = fmap L.pack $ searchNominatim query
+          result (Just (GeolocateQuery query)) = searchNominatim query
 
 parseGeolocateQuery :: L.ByteString -> Maybe GeolocateQuery
 parseGeolocateQuery body = decode body :: Maybe GeolocateQuery
