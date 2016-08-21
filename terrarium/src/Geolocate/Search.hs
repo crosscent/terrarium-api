@@ -4,18 +4,21 @@ module Geolocate.Search
     ( searchNominatim
     )where
 
-import qualified Data.ByteString.Lazy.Char8 as L ( pack
-                                                 , ByteString )
-import qualified Network.HTTP as HTTP       ( getResponseBody
-                                            , simpleHTTP )
+import qualified Data.ByteString.Lazy.Char8 as L    ( pack
+                                                    , ByteString )
+import qualified Network.HTTP as HTTP               ( getResponseBody
+                                                    , simpleHTTP )
+import qualified Network.HTTP.Base as HTTP.Base     ( urlEncode )
                                        
-import qualified HTTP.Base as CustomHTTP    ( getRequest )
-import Control.Applicative                  ( empty )
+import qualified HTTP.Base as CustomHTTP            ( getRequest )
+import Control.Applicative                          ( empty )
 import Data.Aeson
-import Data.Monoid                          ( (<>) )
-import Data.Int                             ( Int64 )
-import Data.Sequence                        ( fromList )
-import qualified Data.Text as Text          ( unpack )
+import qualified Data.Aeson.Types as Aeson.Types    ( Parser (..) )
+import Data.Maybe                                   ( fromMaybe )
+import Data.Monoid                                  ( (<>) )
+import Data.Int                                     ( Int64 )
+import Data.Sequence                                ( fromList )
+import qualified Data.Text as Text                  ( unpack )
 
 type OSM_id = Integer
 
@@ -55,7 +58,7 @@ instance FromJSON NominatimResult where
                            v .: "osm_type" <*>
                            v .: "importance" <*>
                            v .: "display_name" <*>
-                           v .: "polygonpoints"
+                           v .:? "polygonpoints" .!= Polygon []
     parseJSON _          = empty
 
 instance ToJSON NominatimResult where
@@ -74,6 +77,13 @@ filterNominatim (x:xs)
   | osm_type x  == "relation"   = Just x
   | otherwise                   = filterNominatim xs
 
+escapeSpace :: String -> String
+escapeSpace [] = []
+escapeSpace query = takeWhile (/= ' ') query ++  escapeSpace remainder
+    where remainder = case dropWhile (/= ' ') query of
+            [] -> []
+            x -> "%20" ++ tail x
+
 searchNominatim :: String -> IO (L.ByteString)
 searchNominatim query = do
     result <- HTTP.simpleHTTP (CustomHTTP.getRequest $ url) >>= HTTP.getResponseBody
@@ -83,7 +93,7 @@ searchNominatim query = do
             case filterNominatim results of
               Nothing -> return $ encode $ head results
               Just x -> return $ encode x
-    where url = "http://nominatim.openstreetmap.org/search?format=json&polygon=1&addressdetails=1&q=" ++ query
+    where url = "http://nominatim.openstreetmap.org/search?format=json&polygon=1&addressdetails=1&q=" ++ (HTTP.Base.urlEncode query)
 
 getPolygon :: OSM_id -> IO (String)
 getPolygon id = HTTP.simpleHTTP(CustomHTTP.getRequest $ url) >>= HTTP.getResponseBody
